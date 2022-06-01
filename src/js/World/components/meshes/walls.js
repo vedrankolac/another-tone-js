@@ -3,7 +3,7 @@ import { dirtyConcrete } from '../materials/dirtyConcrete';
 
 const createWalls = (scene, size = 20, envmap = null) => {
   const material = dirtyConcrete(0x3333ff, envmap);
-  const materialFloor = dirtyConcrete(0x3333ff, envmap, 0.2);
+  const materialFloor = dirtyConcrete(0x3333ff, envmap, 0.10);
   const geometry = new PlaneGeometry(size, size, 4, 4);
   geometry.attributes.uv2 = geometry.attributes.uv; // second uv is needed for aoMap
 

@@ -1,4 +1,4 @@
-import { Color, Group } from "three";
+import { Color, Group, AudioLoader } from "three";
 import { createColor } from "./utils/createColor.js";
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { Loop } from './system/Loop.js';
@@ -10,14 +10,17 @@ import { VrControls } from './system/VrControls.js';
 import { createHandsPhysicsController } from "./system/handsPhysicsController.js";
 import { sphere } from './components/meshes/sphere.js';
 import { sphereWithAppliedForce } from "./components/meshes/sphereWithAppliedForce.js";
+import { SphereWithSoundAndForce } from "./components/meshes/SphereWithSoundAndForce.js";
 import { cube } from "./components/meshes/cube";
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
 import { AmmoPhysics, PhysicsLoader } from '@enable3d/ammo-physics';
-import { PMREMGenerator } from 'three';
+import { PMREMGenerator, AudioListener } from 'three';
 import { roomComposition } from './components/compositions/roomComposition.js';
 import { createWalls } from './components/meshes/walls.js'
 import { defaultColorShinyPlastic } from "./components/materials/defaultColorShinyPlastic.js";
+import * as Tone from 'tone';
 
+const soundURL = new URL('/assets/public/sounds/ping_pong.mp3', import.meta.url);
 // const hdrURL = new URL('/assets/copyrighted/hdr/studio_small_08_1k.hdr', import.meta.url);
 
 class World {
@@ -25,6 +28,8 @@ class World {
     this.renderer = createRenderer();
     this.scene = createScene(this.renderer);
     this.camera = createCamera();
+    this.listener = new AudioListener();
+    this.camera.add(this.listener);
     this.lights = createLights(this.scene);
     this.loop = new Loop(this.camera, this.scene, this.renderer);
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
@@ -38,7 +43,9 @@ class World {
 
   ammoStart() {
     console.log('ammoStart.a16');
-    this.physics = new AmmoPhysics(this.scene);
+    this.physics = new AmmoPhysics(this.scene, { maxSubSteps: 4, fixedTimeStep: 1 / 30 });
+    console.log(this.physics);
+
     // physics.debug.enable(true);
     this.loop.setPhysics(this.physics);
     this.room = roomComposition(this.physics, this.floorSize, false);
@@ -47,7 +54,7 @@ class World {
   }
 
   buildScene(hdrmap) {
-    console.log('buildScene.b20');
+    console.log('buildScene.b41');
     // const envmaploader = new PMREMGenerator(this.renderer);
     // const envmap = envmaploader.fromCubemap(hdrmap);
     const envmap = { texture: null };
@@ -55,24 +62,24 @@ class World {
     this.walls = createWalls(this.scene, this.floorSize, envmap);
     this.handsPhysicsController = createHandsPhysicsController(this.scene, this.physics, this.vrControls, envmap);
 
-    const spreadWidth = 10;
+    const newContext = new Tone.Context(this.listener.context);
+    console.log('newContext.updateInterval', newContext.updateInterval, newContext.lookAhead);
+    newContext.updateInterval = 0;
+    newContext.lookAhead = 0;
+    console.log('newContext.updateInterval', newContext.updateInterval, newContext.lookAhead);
+    Tone.setContext(newContext);
 
     const colorMaterial2 = defaultColorShinyPlastic(
       createColor(0.62, 1, 0.1),
       envmap
     );
 
-    for (let i = 0; i < 8; i++) {
-      const sphereItem = sphereWithAppliedForce(colorMaterial2, Math.random()/5 + 0.1);
-      sphereItem.castShadow = true;
-      sphereItem.position.x = Math.random() * spreadWidth - spreadWidth/2;
-      sphereItem.position.y = Math.random() + 2;
-      sphereItem.position.z = Math.random() * spreadWidth - spreadWidth/2;
-      this.scene.add(sphereItem); 
-      this.physics.add.existing(sphereItem);
-      this.loop.updatables.push(sphereItem);
-      sphereItem.body.setBounciness(1);
-    }
+    const audioLoader = new AudioLoader();
+    audioLoader.load(soundURL, (buffer) => {
+      for (let i = 0; i < 2; i++) {
+        const sphereItem = new SphereWithSoundAndForce(colorMaterial2, Math.random()/5 + 0.1, this.listener, this.scene, this.physics, this.loop, buffer);
+      }
+    });
   }
 
   start() {

@@ -106,6 +106,27 @@ class RoomEnvironment extends Scene {
 		ceelingLight.scale.set( 4, 0.01, 4 );
 		this.add( ceelingLight );
 
+		// const lightPanelWidth = 3.6;
+
+		// const ceelingElement1 = new Mesh(geometry, createAreaLightMaterial(20));
+		// ceelingElement1.position.set(-2, 4, -2);
+		// ceelingElement1.scale.set(lightPanelWidth, 0.01, lightPanelWidth);
+		// this.add(ceelingElement1);
+
+		// const ceelingElement2 = new Mesh(geometry, createAreaLightMaterial(20));
+		// ceelingElement2.position.set(2, 4, -2);
+		// ceelingElement2.scale.set(lightPanelWidth, 0.01, lightPanelWidth);
+		// this.add(ceelingElement2);
+
+		// const ceelingElement3 = new Mesh(geometry, createAreaLightMaterial(20));
+		// ceelingElement3.position.set(-2, 4, 2);
+		// ceelingElement3.scale.set(lightPanelWidth, 0.01, lightPanelWidth);
+		// this.add(ceelingElement3);
+
+		// const ceelingElement4 = new Mesh(geometry, createAreaLightMaterial(20));
+		// ceelingElement4.position.set(2, 4, 2);
+		// ceelingElement4.scale.set(lightPanelWidth, 0.01, lightPanelWidth);
+		// this.add(ceelingElement4);
 	}
 
 }
