@@ -44,7 +44,7 @@ class World {
     this.physics = new AmmoPhysics(this.scene);
     // physics.debug.enable(true);
     this.loop.setPhysics(this.physics);
-    const room = roomComposition(this.physics, this.floorSize, false);
+    this.room = roomComposition(this.physics, this.floorSize, false);
     new RGBELoader().load(hdrURL, (hdrmap) => this.buildScene(hdrmap));
   }
 
