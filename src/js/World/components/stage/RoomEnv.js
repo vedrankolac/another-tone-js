@@ -70,41 +70,41 @@ class RoomEnvironment extends Scene {
 		// this.add( box6 );
 
 
-		// -x right
-		const light1 = new Mesh( geometry, createAreaLightMaterial( 50 ) );
-		light1.position.set( - 16.116, 14.37, 8.208 );
-		light1.scale.set( 0.1, 2.428, 2.739 );
-		this.add( light1 );
+		// // -x right
+		// const light1 = new Mesh( geometry, createAreaLightMaterial( 50 ) );
+		// light1.position.set( - 16.116, 14.37, 8.208 );
+		// light1.scale.set( 0.1, 2.428, 2.739 );
+		// this.add( light1 );
 
-		// -x left
-		const light2 = new Mesh( geometry, createAreaLightMaterial( 50 ) );
-		light2.position.set( - 16.109, 18.021, - 8.207 );
-		light2.scale.set( 0.1, 2.425, 2.751 );
-		this.add( light2 );
+		// // -x left
+		// const light2 = new Mesh( geometry, createAreaLightMaterial( 50 ) );
+		// light2.position.set( - 16.109, 18.021, - 8.207 );
+		// light2.scale.set( 0.1, 2.425, 2.751 );
+		// this.add( light2 );
 
-		// +x
-		const light3 = new Mesh( geometry, createAreaLightMaterial( 17 ) );
-		light3.position.set( 14.904, 12.198, - 1.832 );
-		light3.scale.set( 0.15, 4.265, 6.331 );
-		this.add( light3 );
+		// // +x
+		// const light3 = new Mesh( geometry, createAreaLightMaterial( 17 ) );
+		// light3.position.set( 14.904, 12.198, - 1.832 );
+		// light3.scale.set( 0.15, 4.265, 6.331 );
+		// this.add( light3 );
 
-		// +z
-		const light4 = new Mesh( geometry, createAreaLightMaterial( 43 ) );
-		light4.position.set( - 0.462, 8.89, 14.520 );
-		light4.scale.set( 4.38, 5.441, 0.088 );
-		this.add( light4 );
+		// // +z
+		// const light4 = new Mesh( geometry, createAreaLightMaterial( 43 ) );
+		// light4.position.set( - 0.462, 8.89, 14.520 );
+		// light4.scale.set( 4.38, 5.441, 0.088 );
+		// this.add( light4 );
 
-		// -z
-		const light5 = new Mesh( geometry, createAreaLightMaterial( 20 ) );
-		light5.position.set( 3.235, 11.486, - 12.541 );
-		light5.scale.set( 2.5, 2.0, 0.1 );
-		this.add( light5 );
+		// // -z
+		// const light5 = new Mesh( geometry, createAreaLightMaterial( 20 ) );
+		// light5.position.set( 3.235, 11.486, - 12.541 );
+		// light5.scale.set( 2.5, 2.0, 0.1 );
+		// this.add( light5 );
 
 		// +y
-		const light6 = new Mesh( geometry, createAreaLightMaterial( 100 ) );
-		light6.position.set( 0.0, 20.0, 0.0 );
-		light6.scale.set( 1.0, 0.1, 1.0 );
-		this.add( light6 );
+		const ceelingLight = new Mesh( geometry, createAreaLightMaterial( 20 ) );
+		ceelingLight.position.set( 0.0, 4.0, 0.0 );
+		ceelingLight.scale.set( 4, 0.01, 4 );
+		this.add( ceelingLight );
 
 	}
 

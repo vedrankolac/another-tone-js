@@ -1,12 +1,13 @@
-import {Math, PlaneGeometry, MeshStandardMaterial, Mesh, DoubleSide, Vector2 } from 'three';
+import {Math, PlaneGeometry, Mesh } from 'three';
 import { dirtyConcrete } from '../materials/dirtyConcrete';
 
 const createWalls = (scene, size = 20, envmap = null) => {
   const material = dirtyConcrete(0x3333ff, envmap);
+  const materialFloor = dirtyConcrete(0x3333ff, envmap, 0.2);
   const geometry = new PlaneGeometry(size, size, 4, 4);
   geometry.attributes.uv2 = geometry.attributes.uv; // second uv is needed for aoMap
 
-  const floor = new Mesh( geometry, material );
+  const floor = new Mesh( geometry, materialFloor );
   floor.receiveShadow = true;
   floor.rotation.x = Math.degToRad(270);
   scene.add(floor);

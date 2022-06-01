@@ -16,12 +16,9 @@ import { AmmoPhysics, PhysicsLoader } from '@enable3d/ammo-physics';
 import { PMREMGenerator } from 'three';
 import { roomComposition } from './components/compositions/roomComposition.js';
 import { createWalls } from './components/meshes/walls.js'
-
-import { defaultColorMattPlastic } from "./components/materials/defaultColorMattPlastic.js";
 import { defaultColorShinyPlastic } from "./components/materials/defaultColorShinyPlastic.js";
-import { defaultColorWithNoise } from "./components/materials/defaultColorWithNoise.js";
 
-const hdrURL = new URL('/assets/copyrighted/hdr/studio_small_08_1k.hdr', import.meta.url);
+// const hdrURL = new URL('/assets/copyrighted/hdr/studio_small_08_1k.hdr', import.meta.url);
 
 class World {
   constructor() {
@@ -45,25 +42,28 @@ class World {
     // physics.debug.enable(true);
     this.loop.setPhysics(this.physics);
     this.room = roomComposition(this.physics, this.floorSize, false);
-    new RGBELoader().load(hdrURL, (hdrmap) => this.buildScene(hdrmap));
+    // new RGBELoader().load(hdrURL, (hdrmap) => this.buildScene(hdrmap));
+    this.buildScene(null);
   }
 
   buildScene(hdrmap) {
     console.log('buildScene.b20');
-    const envmaploader = new PMREMGenerator(this.renderer);
-    const envmap = envmaploader.fromCubemap(hdrmap);
+    // const envmaploader = new PMREMGenerator(this.renderer);
+    // const envmap = envmaploader.fromCubemap(hdrmap);
+    const envmap = { texture: null };
+
     this.walls = createWalls(this.scene, this.floorSize, envmap);
     this.handsPhysicsController = createHandsPhysicsController(this.scene, this.physics, this.vrControls, envmap);
 
     const spreadWidth = 10;
 
     const colorMaterial2 = defaultColorShinyPlastic(
-      createColor(0.62, 1, 0.5),
+      createColor(0.62, 1, 0.1),
       envmap
     );
 
     for (let i = 0; i < 8; i++) {
-      const sphereItem = sphereWithAppliedForce(colorMaterial2, Math.random()/4 + 0.2);
+      const sphereItem = sphereWithAppliedForce(colorMaterial2, Math.random()/5 + 0.1);
       sphereItem.castShadow = true;
       sphereItem.position.x = Math.random() * spreadWidth - spreadWidth/2;
       sphereItem.position.y = Math.random() + 2;
