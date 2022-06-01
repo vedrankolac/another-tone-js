@@ -1,5 +1,5 @@
 {
-  "name": "threejs-material-boilerplate",
+  "name": "another-tone-js",
   "source": "src/index.html",
   "targets": {
     "default": {
@@ -18,7 +18,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/birdlaketree/threejs-material-boilerplate.git"
+    "url": "git+https://github.com/birdlaketree/another-tone-js.git"
   },
   "keywords": [
     "javascript",
@@ -30,9 +30,9 @@
   "author": "vedran.kolac@gmail.com",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/birdlaketree/threejs-material-boilerplate/issues"
+    "url": "https://github.com/birdlaketree/another-tone-js/issues"
   },
-  "homepage": "https://birdlaketree.github.io/threejs-material-boilerplate/",
+  "homepage": "https://birdlaketree.github.io/another-tone-js/",
   "devDependencies": {
     "@parcel/transformer-sass": "^2.3.2",
     "parcel": "^2.3.2"
