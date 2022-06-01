@@ -7,7 +7,9 @@ import { createScene } from './components/stage/scene.js';
 import { createCamera, createDolly } from './components/stage/camera.js';
 import { createLights } from './components/stage/lights.js';
 import { VrControls } from './system/VrControls.js';
+import { createHandsPhysicsController } from "./system/handsPhysicsController.js";
 import { sphere } from './components/meshes/sphere.js';
+import { sphereWithAppliedForce } from "./components/meshes/sphereWithAppliedForce.js";
 import { cube } from "./components/meshes/cube";
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
 import { AmmoPhysics, PhysicsLoader } from '@enable3d/ammo-physics';
@@ -59,102 +61,87 @@ class World {
     this.walls = createWalls(this.scene, this.floorSize, envmap);
     const spreadWidth = 10;
 
-    // right hand physics controller
-    const handleMaterial = defaultColorMattPlastic(
-      createColor(0, 1, 1),
-      envmap
-    );
+    // hands physics controller
+    const handsPhysicsController = createHandsPhysicsController(this.scene, this.physics, this.vrControls, envmap);
 
-    const handDistance = 0;
+    // spheres with force
 
-    const rightHandController = new Group();
-    // const rightHandAnchor = sphere(handleMaterial, 0.04);
-    // rightHandAnchor.position.z = 0;
-    // rightHandAnchor.visible = false;
-    // rightHandController.add(rightHandAnchor);
-    const rightHandAsset = sphere(handleMaterial, 0.04);
-    rightHandAsset.position.z = handDistance;
-    rightHandAsset.castShadow = true;
-    rightHandController.add(rightHandAsset);
-
-    this.scene.add(rightHandController);
-    this.physics.add.existing(rightHandController);
-    rightHandController.visible = false;
-    rightHandController.body.setCollisionFlags(1);
-    rightHandController.body.setBounciness(0.9);
-    this.vrControls.addAssetToRightHand(rightHandController);
-
-    const leftHandController = new Group();
-    const leftHandAsset = sphere(handleMaterial, 0.04);
-    leftHandAsset.position.z = handDistance;
-    leftHandAsset.castShadow = true;
-    leftHandController.add(leftHandAsset);
-
-    this.scene.add(leftHandController);
-    this.physics.add.existing(leftHandController);
-    leftHandController.visible = false;
-    leftHandController.body.setCollisionFlags(1);
-    leftHandController.body.setBounciness(0.9);
-    this.vrControls.addAssetToLeftHand(leftHandController);
-
-    // spheres
-
-    const colorMaterial = defaultColorShinyPlastic(
-      createColor(0.02, 1, 0.5),
+    const colorMaterial2 = defaultColorShinyPlastic(
+      createColor(0.62, 1, 0.5),
       envmap
     );
 
     for (let i = 0; i < 8; i++) {
-      const sphereItem = sphere(colorMaterial, Math.random()/4 + 0.2);
+      const sphereItem = sphereWithAppliedForce(colorMaterial2, Math.random()/4 + 0.2);
+      sphereItem.castShadow = true;
       sphereItem.position.x = Math.random() * spreadWidth - spreadWidth/2;
       sphereItem.position.y = Math.random() + 2;
       sphereItem.position.z = Math.random() * spreadWidth - spreadWidth/2;
       this.scene.add(sphereItem); 
       this.physics.add.existing(sphereItem);
+      this.loop.updatables.push(sphereItem);
       sphereItem.body.setBounciness(1);
     }
 
+    // spheres
+
+    // const colorMaterial1 = defaultColorShinyPlastic(
+    //   createColor(0.72, 1, 0.5),
+    //   envmap
+    // );
+
+    // for (let i = 0; i < 2; i++) {
+    //   const sphereItem = sphere(colorMaterial1, Math.random()/4 + 0.2);
+    //   sphereItem.castShadow = true;
+    //   sphereItem.position.x = Math.random() * spreadWidth - spreadWidth/2;
+    //   sphereItem.position.y = Math.random() + 2;
+    //   sphereItem.position.z = Math.random() * spreadWidth - spreadWidth/2;
+    //   this.scene.add(sphereItem); 
+    //   this.physics.add.existing(sphereItem);
+    //   sphereItem.body.setBounciness(1);
+    // }
+
     // white cubes
 
-    const whiteMaterial = defaultColorWithNoise(
-      createColor(0, 1, 1),
-      envmap
-    );
+    // const whiteMaterial = defaultColorWithNoise(
+    //   createColor(0, 1, 1),
+    //   envmap
+    // );
 
-    for (let i = 0; i < 4; i++) {
-      const cubeItem = cube(whiteMaterial, Math.random() * 1 + 0.2, Math.random() * 1.6 + 0.2, Math.random() * 1 + 0.2);
-      cubeItem.castShadow = true;
-      cubeItem.position.x = Math.random() * spreadWidth - spreadWidth/2;
-      cubeItem.position.y = Math.random() + 2;
-      cubeItem.position.z = Math.random() * spreadWidth - spreadWidth/2;
-      cubeItem.rotation.x = Math.random();
-      cubeItem.rotation.y = Math.random();
-      cubeItem.rotation.z = Math.random();
-      this.scene.add(cubeItem);
-      this.physics.add.existing(cubeItem);
-      cubeItem.body.setBounciness(0.96);
-    }
+    // for (let i = 0; i < 4; i++) {
+    //   const cubeItem = cube(whiteMaterial, Math.random() * 1 + 0.2, Math.random() * 1.6 + 0.2, Math.random() * 1 + 0.2);
+    //   cubeItem.castShadow = true;
+    //   cubeItem.position.x = Math.random() * spreadWidth - spreadWidth/2;
+    //   cubeItem.position.y = Math.random() + 2;
+    //   cubeItem.position.z = Math.random() * spreadWidth - spreadWidth/2;
+    //   cubeItem.rotation.x = Math.random();
+    //   cubeItem.rotation.y = Math.random();
+    //   cubeItem.rotation.z = Math.random();
+    //   this.scene.add(cubeItem);
+    //   this.physics.add.existing(cubeItem);
+    //   cubeItem.body.setBounciness(0.96);
+    // }
 
     // black cubes
 
-    const blackMaterial = defaultColorWithNoise(
-      createColor(0, 0, 0.06),
-      envmap
-    );
+    // const blackMaterial = defaultColorWithNoise(
+    //   createColor(0, 0, 0.06),
+    //   envmap
+    // );
 
-    for (let i = 0; i < 4; i++) {
-      const cubeItem = cube(blackMaterial, Math.random() * 1 + 0.2, Math.random() * 1.6 + 0.2, Math.random() * 1 + 0.2);
-      cubeItem.castShadow = true;
-      cubeItem.position.x = Math.random() * spreadWidth - spreadWidth/2;
-      cubeItem.position.y = Math.random() + 2;
-      cubeItem.position.z = Math.random() * spreadWidth - spreadWidth/2;
-      cubeItem.rotation.x = Math.random();
-      cubeItem.rotation.y = Math.random();
-      cubeItem.rotation.z = Math.random();
-      this.scene.add(cubeItem);
-      this.physics.add.existing(cubeItem);
-      cubeItem.body.setBounciness(0.96);
-    }
+    // for (let i = 0; i < 4; i++) {
+    //   const cubeItem = cube(blackMaterial, Math.random() * 1 + 0.2, Math.random() * 1.6 + 0.2, Math.random() * 1 + 0.2);
+    //   cubeItem.castShadow = true;
+    //   cubeItem.position.x = Math.random() * spreadWidth - spreadWidth/2;
+    //   cubeItem.position.y = Math.random() + 2;
+    //   cubeItem.position.z = Math.random() * spreadWidth - spreadWidth/2;
+    //   cubeItem.rotation.x = Math.random();
+    //   cubeItem.rotation.y = Math.random();
+    //   cubeItem.rotation.z = Math.random();
+    //   this.scene.add(cubeItem);
+    //   this.physics.add.existing(cubeItem);
+    //   cubeItem.body.setBounciness(0.96);
+    // }
 
     // // blue cubes
 
