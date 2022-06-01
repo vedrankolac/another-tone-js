@@ -43,7 +43,7 @@ class World {
 
   ammoStart() {
     console.log('ammoStart.a16');
-    this.physics = new AmmoPhysics(this.scene, { maxSubSteps: 4, fixedTimeStep: 1 / 30 });
+    this.physics = new AmmoPhysics(this.scene, { maxSubSteps: 6, fixedTimeStep: 1 / 30 });
     console.log(this.physics);
 
     // physics.debug.enable(true);
@@ -70,13 +70,13 @@ class World {
     Tone.setContext(newContext);
 
     const colorMaterial2 = defaultColorShinyPlastic(
-      createColor(0.62, 1, 0.1),
+      createColor(0.62, 1, 0.04),
       envmap
     );
 
     const audioLoader = new AudioLoader();
     audioLoader.load(soundURL, (buffer) => {
-      for (let i = 0; i < 2; i++) {
+      for (let i = 0; i < 3; i++) {
         const sphereItem = new SphereWithSoundAndForce(colorMaterial2, Math.random()/5 + 0.1, this.listener, this.scene, this.physics, this.loop, buffer);
       }
     });
