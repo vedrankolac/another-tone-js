@@ -105,7 +105,7 @@ class SphereWithSoundAndForce {
   playSound(v, size) {
     const treshold = 0.004;
     if (v > treshold) {
-      const f = 250 - (size * 100 * 2);
+      const f = 650 - (size * 100 * 2);
       const now = Tone.immediate();
       this.synth.triggerAttackRelease(f, 0.001, now, v); 
     }
