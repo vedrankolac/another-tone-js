@@ -38,35 +38,46 @@ class World {
     this.vrControls = new VrControls(this.renderer, dolly, this.camera);
     this.loop.updatables.push(this.vrControls);
     this.floorSize = 12;
+    this.toneStarted = false;
     PhysicsLoader('static/ammo', () => this.ammoStart());
   }
 
   ammoStart() {
     console.log('ammoStart.a16');
-    this.physics = new AmmoPhysics(this.scene, { maxSubSteps: 6, fixedTimeStep: 1 / 30 });
+    this.physics = new AmmoPhysics(this.scene, { maxSubSteps: 6, fixedTimeStep: 1 / 60 });
     console.log(this.physics);
 
     // physics.debug.enable(true);
     this.loop.setPhysics(this.physics);
     this.room = roomComposition(this.physics, this.floorSize, false);
+
     // new RGBELoader().load(hdrURL, (hdrmap) => this.buildScene(hdrmap));
+    // window.addEventListener("click", () => !this.toneStarted ? this.startSound() : null);
+
     this.buildScene(null);
+    this.startSound();
   }
 
   buildScene(hdrmap) {
-    console.log('buildScene.b41');
+    console.log('buildScene.b.3');
     // const envmaploader = new PMREMGenerator(this.renderer);
     // const envmap = envmaploader.fromCubemap(hdrmap);
     const envmap = { texture: null };
 
     this.walls = createWalls(this.scene, this.floorSize, envmap);
     this.handsPhysicsController = createHandsPhysicsController(this.scene, this.physics, this.vrControls, envmap);
+  }
+
+  startSound() {
+    this.toneStarted = true;
+    Tone.start();
+    const envmap = { texture: null };
 
     const newContext = new Tone.Context(this.listener.context);
-    console.log('newContext.updateInterval', newContext.updateInterval, newContext.lookAhead);
+    // console.log('newContext.updateInterval', newContext.updateInterval, newContext.lookAhead);
     newContext.updateInterval = 0;
     newContext.lookAhead = 0;
-    console.log('newContext.updateInterval', newContext.updateInterval, newContext.lookAhead);
+    // console.log('newContext.updateInterval', newContext.updateInterval, newContext.lookAhead);
     Tone.setContext(newContext);
 
     const colorMaterial2 = defaultColorShinyPlastic(
@@ -74,12 +85,9 @@ class World {
       envmap
     );
 
-    const audioLoader = new AudioLoader();
-    audioLoader.load(soundURL, (buffer) => {
-      for (let i = 0; i < 3; i++) {
-        const sphereItem = new SphereWithSoundAndForce(colorMaterial2, Math.random()/5 + 0.1, this.listener, this.scene, this.physics, this.loop, buffer);
-      }
-    });
+    for (let i = 0; i < 2; i++) {
+      const sphereItem = new SphereWithSoundAndForce(colorMaterial2, Math.random()/5 + 0.1, this.listener, this.scene, this.physics, this.loop);
+    }
   }
 
   start() {

@@ -2,7 +2,7 @@ import { SphereGeometry, Mesh, PositionalAudio } from 'three';
 import * as Tone from 'tone';
 
 class SphereWithSoundAndForce {
-  constructor(material, radius, listener, scene, physics, loop, buffer) {
+  constructor(material, radius, listener, scene, physics, loop) {
     this.geometry = new SphereGeometry(radius, 64, 64);
 
     const spreadWidth = 10;
@@ -20,29 +20,62 @@ class SphereWithSoundAndForce {
     this.mesh.body.checkCollisions = true;
 
     this.positionalAudio = new PositionalAudio(listener);
-    // this.synth = new Tone.Synth({
-    //   oscillator : {
-    //     type: 'sine'
-    //   },
-    //   // envelope: {
-    //   //   attack: 0.001,
-    //   //   decay: 0.02,
-    //   //   sustain: 1,
-    //   //   release: 0.2,
-    //   // }
-    // });
-    // this.positionalAudio.setNodeSource(this.synth);
-    this.positionalAudio.setBuffer(buffer);
+
+    // const reverb = new Tone.Reverb({
+    //   decay: 0.8
+    // }).toDestination();
+
+    // const reverb = new Tone.Freeverb({
+    //   roomSize: 0.1,
+    //   dampening: 10000,
+    // }).toDestination();
+
+    // const filter = new Tone.Filter({
+    //   type : 'highpass',
+    //   frequency : 600
+    // }).toDestination();
+
+    this.synth = new Tone.Synth({
+      // sine, square, triangle, sawtooth
+      oscillator : {
+        type: 'sine'
+      },
+      envelope: {
+        attack: 0.001,
+        decay: 0.001,
+        sustain: 0.2,
+        release: 0.4,
+      }
+    });
+
+    // this.synth.chain(filter);
+
+    this.positionalAudio.setNodeSource(this.synth);
     this.mesh.add(this.positionalAudio);
 
     this.mesh.body.on.collision((otherObject, event) => {
       if (event === 'start') {
-      // if (event === 'start') {
-        // console.log('start', this.mesh.body.velocity.y);
-        this.playSound();
+
+        let v = 0;
+        // ceeling or floor
+        if (otherObject.position.x === 0 && otherObject.position.z === 0) {
+          v = this.mesh.body.velocity.y;
+        }
+
+        // left or right wall
+        if (otherObject.position.z === 0 && otherObject.position.x !== 0 && otherObject.position.y !== 0) {
+          v = this.mesh.body.velocity.x;
+        }
+
+        // front or back wall
+        if (otherObject.position.x === 0 && otherObject.position.y !== 0 && otherObject.position.z !== 0) {
+          v = this.mesh.body.velocity.z;
+        }
+
+        let vNormalized = Math.pow(Math.abs(v), 1/2);
+        // if (vNormalized > 1) vNormalized = 1;
+        this.playSound(vNormalized, this.mesh.body.ammo.threeObject.geometry.boundingSphere.radius);
       }
-      // console.log('start', sphereItem.body.velocity.y);
-      // console.log('start', sphereItem.body.ammo.threeObject.geometry.boundingSphere.radius, sphereItem.body.position.y);
     })
 
     this.mesh.tick = (delta) => {
@@ -69,10 +102,13 @@ class SphereWithSoundAndForce {
     return this.mesh;
   }
 
-  playSound() {
-    // this.synth.triggerAttackRelease('E6', '64n');
-    this.positionalAudio.isPlaying = false;
-    this.positionalAudio.play();
+  playSound(v, size) {
+    const treshold = 0.004;
+    if (v > treshold) {
+      const f = 250 - (size * 100 * 2);
+      const now = Tone.immediate();
+      this.synth.triggerAttackRelease(f, 0.001, now, v); 
+    }
   }
 }
 
