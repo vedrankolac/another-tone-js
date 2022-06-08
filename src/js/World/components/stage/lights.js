@@ -21,8 +21,8 @@ const createLights = scene => {
   point1.shadow.mapSize.width = 4096;
   point1.shadow.mapSize.height = 4096;
   scene.add(point1);
-  const point1marker = sphere(pointMaterial, 0.1);
-  point1.add(point1marker);
+  // const point1marker = sphere(pointMaterial, 0.1);
+  // point1.add(point1marker);
 
   // const point2 = new PointLight(0xffffff, 2);
   // point2.position.set(-4, 6, -4);
