@@ -1,4 +1,10 @@
-## threejs-material-boilerplate
+## another-tone-js
+
+Spatial sound exploration in VR environment, tested only with Oculus Quest 2
+
+[Preview](https://vedrankolac.github.io/another-tone-js/)
+
+### Boilerplate
 Boilerplate for a fast start with three.js materials in ammo physics engine on Oculus Quest 2 VR headset.
 - only tested on Oculus Quest 2
 - movement is controlled with joystick
